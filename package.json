@@ -1,0 +1,40 @@
+{
+  "name": "@helios-lang/ledger-shelley",
+  "version": "0.1.0",
+  "description": "Cardano ledger types for Shelley era",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "build": "npm run prettify && npm run build:types",
+    "build:types": "npx tsc -p jsconfig.json --noEmit false --emitDeclarationOnly",
+    "prettify": "npx prettier . --write",
+    "test": "npm run test:pretty && npm run test:types",
+    "test:pretty": "npx prettier . --check",
+    "test:types": "npm run build:types"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HeliosLang/ledger-shelley.git"
+  },
+  "keywords": [
+    "Cardano",
+    "blockchain",
+    "ledger",
+    "smart",
+    "contracts"
+  ],
+  "author": "Christian Schmitz",
+  "license": "BSD-3-Clause",
+  "bugs": {
+    "url": "https://github.com/HeliosLang/ledger-shelley/issues"
+  },
+  "homepage": "https://github.com/HeliosLang/ledger-shelley#readme",
+  "devDependencies": {
+    "@types/node": "^22.5.0",
+    "prettier": "^3.3.3",
+    "typescript": "^5.5.4"
+  },
+  "dependencies": {
+    "@helios-lang/uplc": "^0.1.37"
+  }
+}
