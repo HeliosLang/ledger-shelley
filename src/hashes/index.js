@@ -1,4 +1,4 @@
-export { PubKeyHash } from "./PubKeyHash.js";
+export { PubKeyHash } from "./PubKeyHash.js"
 
 /**
  * @typedef {import("./Hash.js").Hash} Hash

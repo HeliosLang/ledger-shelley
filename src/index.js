@@ -1,5 +1,6 @@
-export { PubKeyHash } from "./hashes/index.js";
-export { NativeScript } from "./native/index.js";
+export { PubKeyHash } from "./hashes/index.js"
+export { NativeScript } from "./native/index.js"
+export * from "./params/index.js"
 
 /**
  * @typedef {import("./hashes/index.js").Hash} Hash

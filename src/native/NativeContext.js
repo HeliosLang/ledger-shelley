@@ -1,4 +1,4 @@
-import { PubKeyHash } from "../hashes/index.js";
+import { PubKeyHash } from "../hashes/index.js"
 
 /**
  * @typedef {{
