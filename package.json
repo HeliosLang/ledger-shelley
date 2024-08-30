@@ -6,11 +6,12 @@
     "main": "src/index.js",
     "types": "types/index.d.ts",
     "scripts": {
-        "build": "npm run prettify && npm run build:types",
+        "build": "npm run prettify && npm run build:types && npm run test:suite",
         "build:types": "npx tsc -p jsconfig.json --noEmit false --emitDeclarationOnly",
         "prettify": "npx prettier . --write",
-        "test": "npm run test:pretty && npm run test:types",
+        "test": "npm run test:pretty && npm run test:types && npm run test:suite",
         "test:pretty": "npx prettier . --check",
+        "test:suite": "node --test",
         "test:types": "npm run build:types"
     },
     "repository": {
@@ -43,7 +44,7 @@
     },
     "dependencies": {
         "@helios-lang/cbor": "^0.1.21",
-        "@helios-lang/codec-utils": "^0.1.32",
+        "@helios-lang/codec-utils": "^0.1.34",
         "@helios-lang/type-utils": "^0.1.21",
         "@helios-lang/uplc": "^0.3.0"
     }

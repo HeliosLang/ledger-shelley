@@ -2,6 +2,7 @@ import { decodeBytes, encodeBytes } from "@helios-lang/cbor"
 import {
     bytesToHex,
     compareBytes,
+    dummyBytes,
     equalsBytes,
     toBytes
 } from "@helios-lang/codec-utils"
@@ -44,12 +45,11 @@ export class PubKeyHash {
     }
 
     /**
+     * @param {number} seed
      * @returns {PubKeyHash}
      */
-    static dummy() {
-        const bytes = new Array(28).fill(0)
-
-        return new PubKeyHash(bytes)
+    static dummy(seed = 0) {
+        return new PubKeyHash(dummyBytes(28, seed))
     }
 
     /**
