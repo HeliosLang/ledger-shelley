@@ -9,13 +9,13 @@ import {
 import { ByteArrayData, decodeUplcData } from "@helios-lang/uplc"
 
 /**
- * @typedef {import("@helios-lang/codec-utils").ByteArrayLike} ByteArrayLike
+ * @typedef {import("@helios-lang/codec-utils").BytesLike} BytesLike
  * @typedef {import("@helios-lang/uplc").UplcData} UplcData
  * @typedef {import("./Hash.js").Hash} Hash
  */
 
 /**
- * @typedef {PubKeyHash | ByteArrayLike} PubKeyHashLike
+ * @typedef {PubKeyHash | BytesLike} PubKeyHashLike
  */
 
 /**
@@ -61,7 +61,7 @@ export class PubKeyHash {
     }
 
     /**
-     * @param {ByteArrayLike} bytes
+     * @param {BytesLike} bytes
      * @returns {PubKeyHash}
      */
     static fromCbor(bytes) {
@@ -77,7 +77,7 @@ export class PubKeyHash {
     }
 
     /**
-     * @param {ByteArrayLike} bytes
+     * @param {BytesLike} bytes
      * @returns {PubKeyHash}
      */
     static fromUplcCbor(bytes) {

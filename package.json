@@ -43,9 +43,9 @@
         "typescript": "^5.5.4"
     },
     "dependencies": {
-        "@helios-lang/cbor": "^0.1.21",
-        "@helios-lang/codec-utils": "^0.1.34",
-        "@helios-lang/type-utils": "^0.1.21",
-        "@helios-lang/uplc": "^0.3.0"
+        "@helios-lang/cbor": "^0.2.1",
+        "@helios-lang/codec-utils": "^0.2.1",
+        "@helios-lang/type-utils": "^0.1.25",
+        "@helios-lang/uplc": "^0.6.1"
     }
 }

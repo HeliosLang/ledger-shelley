@@ -11,7 +11,7 @@ import { None } from "@helios-lang/type-utils"
 import { PubKeyHash } from "../hashes/index.js"
 
 /**
- * @typedef {import("@helios-lang/codec-utils").ByteArrayLike} ByteArrayLike
+ * @typedef {import("@helios-lang/codec-utils").BytesLike} BytesLike
  * @typedef {import("@helios-lang/codec-utils").IntLike} IntLike
  * @typedef {import("../hashes/index.js").PubKeyHashLike} PubKeyHashLike
  * @typedef {import("./NativeContext.js").NativeContext} NativeContext
@@ -116,8 +116,8 @@ export class NativeScript {
     }
 
     /**
-     * @param {ByteArrayLike} bytes
-     * @param {(bytes: ByteArrayLike) => NativeScriptI} decodeChild - used by Allegra era to allow decoding of other NativeScript types (After and Before)
+     * @param {BytesLike} bytes
+     * @param {(bytes: BytesLike) => NativeScriptI} decodeChild - used by Allegra era to allow decoding of other NativeScript types (After and Before)
      * @returns {NativeScript}
      */
     static fromCbor(bytes, decodeChild = NativeScript.fromCbor) {
