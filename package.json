@@ -1,6 +1,6 @@
 {
     "name": "@helios-lang/ledger-shelley",
-    "version": "0.1.4",
+    "version": "0.1.5",
     "description": "Cardano ledger types for Shelley era",
     "type": "module",
     "main": "src/index.js",
