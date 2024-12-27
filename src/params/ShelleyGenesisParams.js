@@ -1,27 +1,10 @@
 /**
- * @typedef {{
- *   activeSlotsCoeff: number
- *   protocolParams: typeof SHELLEY_GENESIS_PROTOCOL_PARAMS
- *   genDelegs: {
- *     [key: string]: {
- *       delegate: string
- *       vrf: string
- *     }
- *   }
- *   updateQuorum: number
- *   networkId: string
- *   initialFunds: {}
- *   maxLovelaceSupply: number
- *   networkMagic: number
- *   epochLength: number
- *   systemStart: string
- *   slotsPerKESPeriod: number
- *   slotLength: number
- *   maxKESEvolutions: number
- *   securityParam: number
- * }} ShelleyGenesisParams
+ * @import { ShelleyGenesisParams } from "src/index.js"
  */
 
+/**
+ * @type {ShelleyGenesisParams["protocolParams"]}
+ */
 export const SHELLEY_GENESIS_PROTOCOL_PARAMS = {
     protocolVersion: { minor: 0, major: 2 },
     decentralisationParam: 1,

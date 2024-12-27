@@ -6,25 +6,94 @@ import {
     equalsBytes,
     toBytes
 } from "@helios-lang/codec-utils"
-import { ByteArrayData, decodeUplcData } from "@helios-lang/uplc"
+import { decodeUplcData, makeByteArrayData } from "@helios-lang/uplc"
+import { expectByteArrayData } from "@helios-lang/uplc/types/data/ByteArrayData.js"
 
 /**
- * @typedef {import("@helios-lang/codec-utils").BytesLike} BytesLike
- * @typedef {import("@helios-lang/uplc").UplcData} UplcData
- * @typedef {import("./Hash.js").Hash} Hash
+ * @import { BytesLike } from "@helios-lang/codec-utils"
+ * @import { ByteArrayData, UplcData } from "@helios-lang/uplc"
+ * @import { PubKeyHash, PubKeyHashLike } from "../index.js"
  */
 
 /**
- * @typedef {PubKeyHash | BytesLike} PubKeyHashLike
+ * @param {PubKeyHashLike} arg 
+ * @returns {PubKeyHash}
  */
+export function makePubKeyHash(arg) {
+    if (typeof arg == "string") {
+        return new PubKeyHashImpl(arg )
+    } else if ("kind" in arg) {
+        if (arg.kind != "PubKeyHash") {
+            throw new Error("not a PubKeyHash")
+        }
+
+        return arg
+    } else {
+        return new PubKeyHashImpl(arg)
+    }
+}
+
+/**
+ * @param {number} seed
+ * @returns {PubKeyHash}
+ */
+export function makeDummyPubKeyHash(seed = 0) {
+    return new PubKeyHashImpl(dummyBytes(28, seed))
+}
+
+/**
+ * @param {BytesLike} bytes
+ * @returns {PubKeyHash}
+ */
+export function decodePubKeyHash(bytes) {
+    return new PubKeyHashImpl(decodeBytes(bytes))
+}
+
+/**
+ * 
+ * @param {UplcData | BytesLike} data 
+ * @returns {PubKeyHash}
+ */
+export function convertUplcDataToPubKeyHash(data) {
+    if (typeof data == "string") {
+        return convertUplcDataToPubKeyHash(decodeUplcData(data))
+    } else if ("kind" in data) {
+        return new PubKeyHashImpl(expectByteArrayData(data).bytes)
+    } else {
+        return convertUplcDataToPubKeyHash(decodeUplcData(data))
+    }
+}
+
+/**
+ * 
+ * @param {PubKeyHash} a 
+ * @param {PubKeyHash} b 
+ * @returns 
+ */
+export function comparePubKeyHashes(a, b) {
+    return compareBytes(a.bytes, b.bytes)
+}
+
+/**
+ * @param {PubKeyHashLike} arg
+ * @returns {boolean}
+ */
+export function isValidPubKeyHash(arg) {
+    try {
+        makePubKeyHash(arg)
+        return true
+    } catch (e) {
+        return false
+    }
+}
 
 /**
  * Represents a blake2b-224 hash of a PubKey
  *
  * **Note**: A `PubKeyHash` can also be used as the second part of a payment `Address`, or to construct a `StakeAddress`.
- * @implements {Hash}
+ * @implements {PubKeyHash}
  */
-export class PubKeyHash {
+class PubKeyHashImpl {
     /**
      * @readonly
      * @type {number[]}
@@ -45,65 +114,10 @@ export class PubKeyHash {
     }
 
     /**
-     * @param {number} seed
-     * @returns {PubKeyHash}
+     * @type {"PubKeyHash"}
      */
-    static dummy(seed = 0) {
-        return new PubKeyHash(dummyBytes(28, seed))
-    }
-
-    /**
-     * @param {PubKeyHashLike} arg
-     * @returns {PubKeyHash}
-     */
-    static new(arg) {
-        return arg instanceof PubKeyHash ? arg : new PubKeyHash(arg)
-    }
-
-    /**
-     * @param {BytesLike} bytes
-     * @returns {PubKeyHash}
-     */
-    static fromCbor(bytes) {
-        return new PubKeyHash(decodeBytes(bytes))
-    }
-
-    /**
-     * @param {UplcData} data
-     * @returns {PubKeyHash}
-     */
-    static fromUplcData(data) {
-        return new PubKeyHash(ByteArrayData.expect(data).bytes)
-    }
-
-    /**
-     * @param {BytesLike} bytes
-     * @returns {PubKeyHash}
-     */
-    static fromUplcCbor(bytes) {
-        return PubKeyHash.fromUplcData(decodeUplcData(bytes))
-    }
-
-    /**
-     * @param {PubKeyHash} a
-     * @param {PubKeyHash} b
-     * @returns {number}
-     */
-    static compare(a, b) {
-        return compareBytes(a.bytes, b.bytes)
-    }
-
-    /**
-     * @param {PubKeyHashLike} arg
-     * @returns {boolean}
-     */
-    static isValid(arg) {
-        try {
-            PubKeyHash.new(arg)
-            return true
-        } catch (e) {
-            return false
-        }
+    get kind() {
+        return "PubKeyHash"
     }
 
     /**
@@ -148,6 +162,6 @@ export class PubKeyHash {
      * @returns {ByteArrayData}
      */
     toUplcData() {
-        return new ByteArrayData(this.bytes)
+        return makeByteArrayData(this.bytes)
     }
 }

@@ -6,25 +6,57 @@ import {
     encodeInt,
     encodeTuple
 } from "@helios-lang/cbor"
-import { ByteStream, toInt } from "@helios-lang/codec-utils"
-import { None } from "@helios-lang/type-utils"
-import { PubKeyHash } from "../hashes/index.js"
+import { makeByteStream, toInt } from "@helios-lang/codec-utils"
+import {  } from "../hashes/index.js"
+import { makeNativeSigScript } from "./NativeSigScript.js"
 
 /**
- * @typedef {import("@helios-lang/codec-utils").BytesLike} BytesLike
- * @typedef {import("@helios-lang/codec-utils").IntLike} IntLike
- * @typedef {import("../hashes/index.js").PubKeyHashLike} PubKeyHashLike
- * @typedef {import("./NativeContext.js").NativeContext} NativeContext
+ * @import { BytesLike, IntLike } from "@helios-lang/codec-utils"
+ * @import { NativeContext, NativeScript, PubKeyHash, PubKeyHashLike } from "../index.js"
  */
+
+/**
+ * @param {BytesLike} bytes
+ * @param {(bytes: BytesLike) => NativeScript} decodeChild - used by Allegra era to allow decoding of other NativeScript types (After and Before)
+ * @returns {NativeScript}
+ */
+export function decodeNativeScript(bytes, decodeChild = decodeNativeScript) {
+    const stream = makeByteStream({bytes})
+
+    if (stream.peekOne() == 0) {
+        stream.shiftOne()
+    }
+
+    const [tag, decodeItem] = decodeTagged(stream)
+
+    switch (tag) {
+        case 0:
+            return makeNativeSigScript(decodeItem(PubKeyHash))
+        case 1:
+            return NativeScript.All(
+                decodeItem((s) => decodeList(s, decodeChild))
+            )
+        case 2:
+            return NativeScript.Any(
+                decodeItem((s) => decodeList(s, decodeChild))
+            )
+        case 3:
+            return NativeScript.AtLeast(
+                decodeItem(decodeInt),
+                decodeItem((s) => decodeList(s, decodeChild))
+            )
+        default:
+            throw new Error(`unexpected NativeScript tag ${tag}`)
+    }
+}
 
 /**
  * So we can use the Allegra After/Before NativeScripts as children of Shelley NativeScripts
  * @template {NativeContext} [C=NativeContext]
- * @typedef {{
- *   eval: (ctx: C) => boolean
- *   toCbor: () => number[]
- *   toJson: () => Object
- * }} NativeScriptI
+ * @typedef {object} NativeScript 
+ * @prop {(ctx: C) => boolean} eval
+ * @prop {() => number[]} toCbor
+ * @prop {() => object} toJson
  */
 
 /**
@@ -49,9 +81,9 @@ import { PubKeyHash } from "../hashes/index.js"
 /**
  * @template {NativeScriptKind} [T=NativeScriptKind]
  * @template {NativeContext} [C=NativeContext]
- * @implements {NativeScriptI<NativeContext>}
+ * @implements {NativeScript<NativeContext>}
  */
-export class NativeScript {
+class NativeScriptImpl {
     /**
      * @readonly
      * @type {T}
